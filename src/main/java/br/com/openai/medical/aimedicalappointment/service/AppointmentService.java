@@ -4,6 +4,8 @@ import br.com.openai.medical.aimedicalappointment.functions.CreateAppointment;
 import br.com.openai.medical.aimedicalappointment.functions.CreateAppointmentResponse;
 import br.com.openai.medical.aimedicalappointment.functions.GetDoctorSchedule;
 import br.com.openai.medical.aimedicalappointment.functions.GetDoctorScheduleResponse;
+import br.com.openai.medical.aimedicalappointment.functions.GetSchedule;
+import br.com.openai.medical.aimedicalappointment.functions.GetScheduleResponse;
 import br.com.openai.medical.aimedicalappointment.repository.AppointmentRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.Appointment;
 import org.springframework.security.core.Authentication;
@@ -40,5 +42,14 @@ public class AppointmentService {
       return new GetDoctorScheduleResponse(new ArrayList<>(), "Não existe agenda para o medico informado.");
     }
     return new GetDoctorScheduleResponse(results, "Lista de agendamentos, contendo data e hora em formato escrito, paciente e a especialidade para o médico informado");
+  }
+
+  public GetScheduleResponse getSchedule(GetSchedule getSchedule) {
+    List<Appointment> results = appointmentRepository.findAll();
+
+    if (results.isEmpty()) {
+      return new GetScheduleResponse(new ArrayList<>(), "Não existe agenda para nenhum medico.");
+    }
+    return new GetScheduleResponse(results, "Lista de agendamentos, contendo data e hora em formato escrito, paciente e a especialidade para o médico informado");
   }
 }
