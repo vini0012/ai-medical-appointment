@@ -6,19 +6,30 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
+import dev.failsafe.Failsafe;
+import dev.failsafe.RetryPolicy;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class OpenAiCommandExecutor {
-
+  @Resource(name = "chatHistory")
+  List<ChatMessage> messages;
   private final OpenAiService openAiService;
   private final FunctionExecutor functionExecutor;
+
+  private final RetryPolicy<Object> retryPolicy = RetryPolicy.builder()
+    .handle(SocketTimeoutException.class)
+    .onRetry(event -> {
+      System.out.println("Timeout Occurred, retrying...");
+    })
+    .withMaxRetries(3)
+    .build();
 
   public OpenAiCommandExecutor(OpenAiService openAiService, FunctionExecutor functionExecutor) {
     this.openAiService = openAiService;
@@ -26,15 +37,6 @@ public class OpenAiCommandExecutor {
   }
 
   public String executeCommand(String userPrompt) {
-
-    List<ChatMessage> messages = new ArrayList<>(List.of(
-      new ChatMessage(ChatMessageRole.SYSTEM.value(), "Leve em conta que o horario e dia atual é: " + LocalDateTime.now()),
-      new ChatMessage(ChatMessageRole.SYSTEM.value(), "Responda sempre no mesmo idioma que a frase enviada pelo usuário"),
-      new ChatMessage(ChatMessageRole.SYSTEM.value(), "Você é um secretário do médico, responsável por agendar novas consultas e consultar a agenda do médico, nada mais"),
-      new ChatMessage(ChatMessageRole.SYSTEM.value(), "Você nao acordou bem hoje, e está muito mau humorado e ofensivo"),
-      new ChatMessage(ChatMessageRole.SYSTEM.value(), "Para todas as datas, você vai usar o padrão ISO")
-    ));
-
     ChatMessage firstMsg = new ChatMessage(ChatMessageRole.USER.value(), userPrompt);
     messages.add(firstMsg);
 
@@ -49,8 +51,8 @@ public class OpenAiCommandExecutor {
       .logitBias(new HashMap<>())
       .build();
 
-    ChatMessage responseMessage = openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
-    messages.add(responseMessage); // don't forget to update the conversation with the latest response
+    ChatMessage responseMessage = getResponseMessage(chatCompletionRequest);
+    messages.add(responseMessage);
 
     ChatFunctionCall functionCall = responseMessage.getFunctionCall();
     if (functionCall != null) {
@@ -64,9 +66,15 @@ public class OpenAiCommandExecutor {
       }
     }
 
-    responseMessage = openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
+    responseMessage = getResponseMessage(chatCompletionRequest);
     messages.add(responseMessage);
 
     return responseMessage.getContent();
+  }
+
+  private ChatMessage getResponseMessage(ChatCompletionRequest chatCompletionRequest) {
+    return Failsafe
+      .with(retryPolicy)
+      .get(() -> openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage());
   }
 }

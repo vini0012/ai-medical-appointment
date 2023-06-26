@@ -39,7 +39,6 @@ public class AppointmentService {
     if (results.isEmpty()) {
       return new GetDoctorScheduleResponse(new ArrayList<>(), "Não existe agenda para o medico informado.");
     }
-    return new GetDoctorScheduleResponse(results, "Esta é a lista de agendamentos, contendo data, paciente e a especialidade para o medico informado.");
-
+    return new GetDoctorScheduleResponse(results, "Lista de agendamentos, contendo data e hora em formato escrito, paciente e a especialidade para o médico informado");
   }
 }

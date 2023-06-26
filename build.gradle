@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.theokanning.openai-gpt3-java:service:0.14.0'
+    implementation 'dev.failsafe:failsafe:3.3.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
