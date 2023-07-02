@@ -26,6 +26,7 @@ dependencies {
     implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot3', version: '2.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
