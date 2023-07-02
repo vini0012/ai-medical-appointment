@@ -23,8 +23,9 @@ public class SecurityConfig {
     this.successHandler = successHandler;
   }
 
-  private static AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configureDefaultRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry defaultRequests) {
-    return defaultRequests
+  private static void configureDefaultRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry defaultRequests) {
+    defaultRequests
+      .requestMatchers("/actuator/**").permitAll()
       .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
       .anyRequest().authenticated();
   }
@@ -38,8 +39,8 @@ public class SecurityConfig {
       .build();
   }
 
-  private OAuth2LoginConfigurer<HttpSecurity> configureOauth2(OAuth2LoginConfigurer<HttpSecurity> oauth2login) {
-    return oauth2login
+  private void configureOauth2(OAuth2LoginConfigurer<HttpSecurity> oauth2login) {
+    oauth2login
       .userInfoEndpoint(userInfoEndpoint ->
         userInfoEndpoint
           .userService(oAuth2UserService)

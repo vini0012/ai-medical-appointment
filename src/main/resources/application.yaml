@@ -11,6 +11,7 @@ resilience4j:
         ignoreExceptions:
           - org.springframework.web.client.HttpClientErrorException
 
+
 openAi:
   token: ${OPENAI_TOKEN}
 spring:
@@ -40,4 +41,8 @@ spring:
             scope:
               - user:email
               - read:user
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
