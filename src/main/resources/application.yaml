@@ -12,7 +12,7 @@ resilience4j:
           - org.springframework.web.client.HttpClientErrorException
 
 openAi:
-  token: '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'
+  token: ${OPENAI_TOKEN}
 spring:
   data:
     mongodb:
@@ -29,14 +29,14 @@ spring:
       client:
         registration:
           google:
-            client-id: '515106661034-44kuvah7uajmb56vc0lkoufeireu1g8d.apps.googleusercontent.com'
-            client-secret: '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'
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_SECRET}
             scope:
               - email
               - profile
           github:
-            client-id: '318fe0b379c2c7bc2261'
-            client-secret: '00f891362dc7f7a93f1004896fa8451d7fa64b62'
+            client-id: ${GITHUB_ID}
+            client-secret: ${GITHUB_SECRET}
             scope:
               - user:email
               - read:user
