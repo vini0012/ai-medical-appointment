@@ -26,9 +26,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     UserProfile profile = userProfileService.processOAuthPostLogin(oAuthUser);
     if (nonNull(profile)) {
-      profile.getRoles().forEach(role -> {
-        oAuthUser.getAuthorities().add(new SimpleGrantedAuthority(role.name()));
-      });
+      profile.getRoles().forEach(role -> oAuthUser.getAuthorities().add(new SimpleGrantedAuthority(role.name())));
     }
     return oAuthUser;
   }

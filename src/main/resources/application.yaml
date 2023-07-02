@@ -1,3 +1,16 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      aiMedicalAppointment:
+        slidingWindowSize: 30
+        permittedNumberOfCallsInHalfOpenState: 2
+        slidingWindowType: TIME_BASED
+        minimumNumberOfCalls: 20
+        waitDurationInOpenState: 30s
+        failureRateThreshold: 80
+        ignoreExceptions:
+          - org.springframework.web.client.HttpClientErrorException
+
 openAi:
   token: ${OPENAI_TOKEN}
 spring:
@@ -27,3 +40,4 @@ spring:
             scope:
               - user:email
               - read:user
+

@@ -22,6 +22,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.theokanning.openai-gpt3-java:service:0.14.0'
     implementation 'dev.failsafe:failsafe:3.3.2'
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-circuitbreaker', version: '2.0.2'
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-annotations', version: '2.0.2'
+    implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot3', version: '2.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

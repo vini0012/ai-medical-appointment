@@ -6,30 +6,28 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
-import dev.failsafe.Failsafe;
-import dev.failsafe.RetryPolicy;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class OpenAiCommandExecutor {
+
+  private static final Logger LOG = LoggerFactory.getLogger(OpenAiCommandExecutor.class);
+  private static final String CIRCUIT_BREAKER_INSTANCE_NAME = "aiMedicalAppointment";
+  private static final String FALLBACK_METHOD = "fallback";
   @Resource(name = "chatHistory")
   List<ChatMessage> messages;
   private final OpenAiService openAiService;
   private final FunctionExecutor functionExecutor;
-
-  private final RetryPolicy<Object> retryPolicy = RetryPolicy.builder()
-    .handle(SocketTimeoutException.class)
-    .onRetry(event -> {
-      System.out.println("Timeout Occurred, retrying...");
-    })
-    .withMaxRetries(3)
-    .build();
 
   public OpenAiCommandExecutor(OpenAiService openAiService, FunctionExecutor functionExecutor) {
     this.openAiService = openAiService;
@@ -56,13 +54,13 @@ public class OpenAiCommandExecutor {
 
     ChatFunctionCall functionCall = responseMessage.getFunctionCall();
     if (functionCall != null) {
-      System.out.println("Trying to execute " + functionCall.getName() + "...");
+      LOG.info("Trying to execute {}...", functionCall.getName());
       Optional<ChatMessage> message = functionExecutor.executeAndConvertToMessageSafely(functionCall);
       if (message.isPresent()) {
-        System.out.println("Executed " + functionCall.getName() + ".");
+        LOG.info("Executed {}.", functionCall.getName());
         messages.add(message.get());
       } else {
-        System.out.println("Something went wrong with the execution of " + functionCall.getName() + "...");
+        LOG.info("Something went wrong with the execution of {}...", functionCall.getName());
       }
     }
 
@@ -72,9 +70,14 @@ public class OpenAiCommandExecutor {
     return responseMessage.getContent();
   }
 
+  @CircuitBreaker(name = CIRCUIT_BREAKER_INSTANCE_NAME, fallbackMethod = FALLBACK_METHOD)
   private ChatMessage getResponseMessage(ChatCompletionRequest chatCompletionRequest) {
-    return Failsafe
-      .with(retryPolicy)
-      .get(() -> openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage());
+    return openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
   }
+
+  protected <T> ResponseEntity<T> fallback(CallNotPermittedException callNotPermittedException) {
+    LOG.error("{} -> Inside circuit breaker fallback, cause {}", callNotPermittedException.getCausingCircuitBreakerName(), callNotPermittedException.getMessage());
+    throw new RuntimeException("Circuit Breaker Open", callNotPermittedException);
+  }
+
 }
