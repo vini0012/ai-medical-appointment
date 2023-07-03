@@ -31,8 +31,13 @@ dependencies {
     implementation 'io.micrometer:micrometer-observation'
     implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation(platform('org.junit:junit-bom:5.9.3'))
+    testImplementation('org.junit.jupiter:junit-jupiter')
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
