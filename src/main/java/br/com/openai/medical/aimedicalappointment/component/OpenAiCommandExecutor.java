@@ -6,12 +6,11 @@ import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
 import com.theokanning.openai.service.FunctionExecutor;
 import com.theokanning.openai.service.OpenAiService;
-import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
+@Observed
 public class OpenAiCommandExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpenAiCommandExecutor.class);
@@ -75,9 +75,8 @@ public class OpenAiCommandExecutor {
     return openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
   }
 
-  protected <T> ResponseEntity<T> fallback(CallNotPermittedException callNotPermittedException) {
-    LOG.error("{} -> Inside circuit breaker fallback, cause {}", callNotPermittedException.getCausingCircuitBreakerName(), callNotPermittedException.getMessage());
-    throw new RuntimeException("Circuit Breaker Open", callNotPermittedException);
+  protected ChatMessage fallback(ChatCompletionRequest chatCompletionRequest, Throwable t) {
+    LOG.error("Inside circuit breaker fallback, cause", t);
+    return new ChatMessage("System", "Erro ao chamar API - Circuit Breaker Open");
   }
-
 }

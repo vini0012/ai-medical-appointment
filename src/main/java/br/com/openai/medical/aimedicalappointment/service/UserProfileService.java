@@ -4,14 +4,15 @@ import br.com.openai.medical.aimedicalappointment.repository.UserProfileReposito
 import br.com.openai.medical.aimedicalappointment.repository.model.Roles;
 import br.com.openai.medical.aimedicalappointment.repository.model.UserProfile;
 import br.com.openai.medical.aimedicalappointment.security.CustomOAuth2User;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Observed
 public class UserProfileService {
   @Autowired
   private UserProfileRepository userProfileRepository;
-
 
   public UserProfile getUserByEmail(String userEmail) {
     return userProfileRepository.getUserProfileByEmail(userEmail);

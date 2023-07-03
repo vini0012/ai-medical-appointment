@@ -8,6 +8,7 @@ import br.com.openai.medical.aimedicalappointment.functions.GetSchedule;
 import br.com.openai.medical.aimedicalappointment.functions.GetScheduleResponse;
 import br.com.openai.medical.aimedicalappointment.repository.AppointmentRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.Appointment;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Observed
 public class AppointmentService {
 
   private final AppointmentRepository appointmentRepository;
-
 
   public AppointmentService(AppointmentRepository appointmentRepository) {
     this.appointmentRepository = appointmentRepository;
