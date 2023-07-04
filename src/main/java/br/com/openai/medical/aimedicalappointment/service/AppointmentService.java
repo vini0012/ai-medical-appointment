@@ -1,5 +1,6 @@
 package br.com.openai.medical.aimedicalappointment.service;
 
+import br.com.openai.medical.aimedicalappointment.event.AppointmentPersistEvent;
 import br.com.openai.medical.aimedicalappointment.functions.CreateAppointment;
 import br.com.openai.medical.aimedicalappointment.functions.CreateAppointmentResponse;
 import br.com.openai.medical.aimedicalappointment.functions.GetDoctorSchedule;
@@ -9,6 +10,8 @@ import br.com.openai.medical.aimedicalappointment.functions.GetScheduleResponse;
 import br.com.openai.medical.aimedicalappointment.repository.AppointmentRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.Appointment;
 import io.micrometer.observation.annotation.Observed;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,9 +24,11 @@ import java.util.List;
 public class AppointmentService {
 
   private final AppointmentRepository appointmentRepository;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
-  public AppointmentService(AppointmentRepository appointmentRepository) {
+  public AppointmentService(AppointmentRepository appointmentRepository, ApplicationEventPublisher applicationEventPublisher) {
     this.appointmentRepository = appointmentRepository;
+    this.applicationEventPublisher = applicationEventPublisher;
   }
 
   public CreateAppointmentResponse createAppointment(CreateAppointment createAppointment) {
@@ -32,6 +37,7 @@ public class AppointmentService {
     appointment.patient = auth.getName();
 
     appointmentRepository.save(appointment);
+    applicationEventPublisher.publishEvent(new AppointmentPersistEvent(this, appointment));
 
     return new CreateAppointmentResponse(appointment.specialization, appointment.doctorName, appointment.patient, appointment.date);
   }

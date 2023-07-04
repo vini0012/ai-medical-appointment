@@ -23,7 +23,6 @@ public class OpenAiCommandExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(OpenAiCommandExecutor.class);
   private static final String CIRCUIT_BREAKER_INSTANCE_NAME = "aiMedicalAppointment";
-  private static final String FALLBACK_METHOD = "fallback";
   @Resource(name = "chatHistory")
   List<ChatMessage> messages;
   private final OpenAiService openAiService;
@@ -70,13 +69,8 @@ public class OpenAiCommandExecutor {
     return responseMessage.getContent();
   }
 
-  @CircuitBreaker(name = CIRCUIT_BREAKER_INSTANCE_NAME, fallbackMethod = FALLBACK_METHOD)
+  @CircuitBreaker(name = CIRCUIT_BREAKER_INSTANCE_NAME)
   private ChatMessage getResponseMessage(ChatCompletionRequest chatCompletionRequest) {
     return openAiService.createChatCompletion(chatCompletionRequest).getChoices().get(0).getMessage();
-  }
-
-  protected ChatMessage fallback(ChatCompletionRequest chatCompletionRequest, Throwable t) {
-    LOG.error("Inside circuit breaker fallback, cause", t);
-    return new ChatMessage("System", "Erro ao chamar API - Circuit Breaker Open");
   }
 }

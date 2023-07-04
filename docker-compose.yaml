@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 
 services:
 
@@ -11,6 +11,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
       MONGO_INITDB_DATABASE: openai
+
+  rabbitmq:
+    image: rabbitmq:3.8.17-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   mongo-express:
     image: mongo-express
