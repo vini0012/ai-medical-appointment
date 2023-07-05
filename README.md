@@ -15,6 +15,20 @@ De forma assim facilitando a interação e a experiencia do usuario.
 
 ## Detalhes sobre a Security
 
+  Para gerar o token do OpenAI, para usar as APIS, sega o seguinte tutorial:
+  - https://text-gen.com/get-openai-access-token
+
+  É necessario criar os tokens das APIS de autenticação do Google e/ou github:
+  
+  - Google:
+    - https://developers.google.com/workspace/guides/create-credentials
+    - Callback URL - http://localhost:8080/login/oauth2/code/google
+
+  - Github:
+    - https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app
+    - HomePage URL - http://localhost:8080
+    - Callback URL - http://localhost:8080/login/oauth2/code/github
+
 
 ## Integrantes
 
