@@ -1,5 +1,5 @@
 # Documentação completa da API -> [ai-medical-appointment](http://localhost:8080/swagger-ui/index.html)
-
+ 
 ## Requisitos para execução do projeto
 - Docker;
 - Java 17;
