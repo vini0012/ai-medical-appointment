@@ -13,7 +13,7 @@ Feito isso, basta executar a aplicação Spring Boot.
 
 Trabalho final para matéria de Arquitetura de Software com framework Java PUC MG ministrada pelo professor Samuel 
 Almeida Cardoso, onde a aplicação foi criada com o intuito 
-de Construir um chatbot de uma assistente pessoal responder perguntas e realizar tarefas específicas como o agendamento de consultas medicas utilizando a [API OpenAI](https://github.com/TheoKanning/openai-java) 
+de construir um chatbot de uma assistente pessoal responder perguntas e realizar tarefas específicas como o agendamento de consultas medicas utilizando a [API OpenAI](https://github.com/TheoKanning/openai-java) 
 para cadastro dos medicos, criação de agendas, consultar agendas, marcação de horarios
 para consultar com determinado medico.
 
