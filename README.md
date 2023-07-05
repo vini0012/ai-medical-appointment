@@ -5,7 +5,7 @@
 - Java 17;
 - Gradle.
 
-### Executando o projeto
+### Executando o projeto 
 Após clonar o projeto com o Docker rodando, acesse o terminal e execute o comando `docker-compose up` para criar as imagens dos containers da aplicação.
 Feito isso, basta executar a aplicação Spring Boot.
 
