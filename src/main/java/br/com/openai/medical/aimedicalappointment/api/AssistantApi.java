@@ -1,7 +1,7 @@
 package br.com.openai.medical.aimedicalappointment.api;
 
 import br.com.openai.medical.aimedicalappointment.component.OpenAiCommandExecutor;
-import br.com.openai.medical.aimedicalappointment.security.CustomOAuth2User;
+import br.com.openai.medical.aimedicalappointment.repository.model.CustomOAuth2User;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;

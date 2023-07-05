@@ -1,5 +1,6 @@
-package br.com.openai.medical.aimedicalappointment.security;
+package br.com.openai.medical.aimedicalappointment.config;
 
+import br.com.openai.medical.aimedicalappointment.repository.model.CustomOAuth2User;
 import br.com.openai.medical.aimedicalappointment.service.UserProfileService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

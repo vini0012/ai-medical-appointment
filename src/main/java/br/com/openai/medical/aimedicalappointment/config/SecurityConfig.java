@@ -1,5 +1,6 @@
-package br.com.openai.medical.aimedicalappointment.security;
+package br.com.openai.medical.aimedicalappointment.config;
 
+import br.com.openai.medical.aimedicalappointment.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

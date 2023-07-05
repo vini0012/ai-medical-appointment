@@ -3,7 +3,7 @@ package br.com.openai.medical.aimedicalappointment.service;
 import br.com.openai.medical.aimedicalappointment.repository.UserProfileRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.Roles;
 import br.com.openai.medical.aimedicalappointment.repository.model.UserProfile;
-import br.com.openai.medical.aimedicalappointment.security.CustomOAuth2User;
+import br.com.openai.medical.aimedicalappointment.repository.model.CustomOAuth2User;
 import io.micrometer.observation.annotation.Observed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
