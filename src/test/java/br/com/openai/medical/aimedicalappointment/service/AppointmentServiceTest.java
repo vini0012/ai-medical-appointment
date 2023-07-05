@@ -1,19 +1,23 @@
 package br.com.openai.medical.aimedicalappointment.service;
 
-import br.com.openai.medical.aimedicalappointment.functions.*;
+import br.com.openai.medical.aimedicalappointment.functions.CreateAppointment;
+import br.com.openai.medical.aimedicalappointment.functions.CreateAppointmentResponse;
+import br.com.openai.medical.aimedicalappointment.functions.GetDoctorSchedule;
+import br.com.openai.medical.aimedicalappointment.functions.GetDoctorScheduleResponse;
+import br.com.openai.medical.aimedicalappointment.functions.GetSchedule;
+import br.com.openai.medical.aimedicalappointment.functions.GetScheduleResponse;
 import br.com.openai.medical.aimedicalappointment.repository.AppointmentRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.Appointment;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +25,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringJUnitConfig
-@SpringBootTest
-public class AppointmentServiceTest {
+
+class AppointmentServiceTest {
 
     @Mock
     private AppointmentRepository repository;
@@ -31,12 +34,12 @@ public class AppointmentServiceTest {
     @Mock
     private ApplicationEventPublisher publisher;
 
-    @Autowired
     @InjectMocks
     private AppointmentService appointmentService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         SecurityContext securityContextMock = mock(SecurityContext.class);
         Authentication authenticationMock = mock(Authentication.class);
         when(authenticationMock.getName()).thenReturn("Lucas Santos");
@@ -46,7 +49,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void testCreateAppointment() {
+    void testCreateAppointment() {
         CreateAppointment createAppointment = new CreateAppointment();
         createAppointment.date = "2023-07-05T12:50:00";
         createAppointment.doctorName = "Roberto";
@@ -63,7 +66,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void getDoctorSchedule() {
+    void getDoctorSchedule() {
         GetDoctorSchedule doctorSchedule = new GetDoctorSchedule();
         doctorSchedule.doctorName = "Roberto";
 
@@ -83,7 +86,7 @@ public class AppointmentServiceTest {
     }
 
     @Test
-    public void getSchedule() {
+    void getSchedule() {
         GetSchedule schedule = new GetSchedule();
 
         Appointment appointment1 = createAppointment("Roberto", "2023-07-05T12:50:00", "João Vitor", "Dermatologista");

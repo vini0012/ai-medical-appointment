@@ -1,7 +1,8 @@
+package br.com.openai.medical.aimedicalappointment.service;
+
 import br.com.openai.medical.aimedicalappointment.repository.UserProfileRepository;
 import br.com.openai.medical.aimedicalappointment.repository.model.UserProfile;
 import br.com.openai.medical.aimedicalappointment.security.CustomOAuth2User;
-import br.com.openai.medical.aimedicalappointment.service.UserProfileService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
